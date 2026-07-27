@@ -1,4 +1,4 @@
-﻿name: Build APK
+name: Build APK
 
 on:
   push:
@@ -8,14 +8,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/kivy/buildozer:latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libncurses5 libncursesw5 git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev python3-pip python3-dev
+          pip3 install --upgrade buildozer cython pillow
+
       - name: Build APK
         run: |
-          buildozer android debug
+          export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
