@@ -1,6 +1,6 @@
 """
-🦉 Game Text Translator - Android App
-Chạy trên Kivy, dịch file game English → Vietnamese
+ðŸ¦‰ Game Text Translator - Android App
+Cháº¡y trÃªn Kivy, dá»‹ch file game English â†’ Vietnamese
 """
 
 import os, re, json, time, zipfile, shutil, tempfile, threading
@@ -17,7 +17,7 @@ from kivy.clock import Clock
 from kivy.utils import platform
 from kivy.core.window import Window
 
-# ─── Translator Engine ───────────────────────────────
+# â”€â”€â”€ Translator Engine â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 CTRL_RE = re.compile(r'\\(?:c\[\d+\]|m\[\w+\]|C\[\d+\]|SET\w+(?:\[[^\]]*\])?|Lshake|Rshake|plf|prf|PLF|PRF|narr|Cam\w+|\.\.\.|opt[BD]\[[^\]]*\])')
 EN_RE = re.compile(r'[A-Za-z]')
 KEY_RE = re.compile(r'^[\w]+/[\w]+$')
@@ -65,7 +65,7 @@ def extract_texts_from_line(line):
         if tp != 'text': continue
         tx = tx.strip()
         if tx and has_en(tx) and len(tx) >= 2:
-            for sep in ['：', ':']:
+            for sep in ['ï¼š', ':']:
                 if sep in tx:
                     after = tx.split(sep, 1)[1].strip()
                     if after and has_en(after) and len(after) >= 2: texts.append(after); break
@@ -85,7 +85,7 @@ def translate_text(text):
 def apply(text, mapping):
     s = text.strip()
     if not s or not has_en(s) or len(s) < 2: return text
-    for sep in ['：', ':']:
+    for sep in ['ï¼š', ':']:
         if sep in text:
             before, after = text.split(sep, 1)
             a_s = after.strip()
@@ -129,7 +129,7 @@ class Translator:
         os.makedirs(dst, exist_ok=True)
         files = walk_text_files(src)
         if not files:
-            self.status_cb("❌ Không tìm thấy file text nào.")
+            self.status_cb("âŒ KhÃ´ng tÃ¬m tháº¥y file text nÃ o.")
             return
 
         all_texts = []
@@ -137,10 +137,10 @@ class Translator:
             for line in open(os.path.join(src, rel), encoding='utf-8', errors='ignore'):
                 all_texts.extend(extract_texts_from_line(line))
         unique = list(dict.fromkeys(all_texts))
-        self.status_cb(f"📊 {len(files)} files, {len(unique)} unique texts")
+        self.status_cb(f"ðŸ“Š {len(files)} files, {len(unique)} unique texts")
 
         if not unique:
-            self.status_cb("✅ Không có text cần dịch.")
+            self.status_cb("âœ… KhÃ´ng cÃ³ text cáº§n dá»‹ch.")
             for rel in files:
                 sp = os.path.join(src, rel); dp = os.path.join(dst, rel)
                 os.makedirs(os.path.dirname(dp), exist_ok=True); shutil.copy2(sp, dp)
@@ -148,7 +148,7 @@ class Translator:
 
         # Translate
         mapping = {}; total = len(unique)
-        self.status_cb(f"🌐 Đang dịch {total} texts...")
+        self.status_cb(f"ðŸŒ Äang dá»‹ch {total} texts...")
         done = 0
         with concurrent.futures.ThreadPoolExecutor(max_workers=15) as exe:
             futs = {exe.submit(lambda t: (t, translate_text(t)), t): t for t in unique}
@@ -173,8 +173,8 @@ class Translator:
             total_changes += changes
 
         elapsed = time.time() - t0
-        self.status_cb(f"✅ XONG: {total_changes:,} changes, {len(files)} files ({elapsed:.0f}s)")
-        self.status_cb(f"📁 Output: {dst}")
+        self.status_cb(f"âœ… XONG: {total_changes:,} changes, {len(files)} files ({elapsed:.0f}s)")
+        self.status_cb(f"ðŸ“ Output: {dst}")
 
 
 class MainLayout(BoxLayout):
@@ -186,13 +186,13 @@ class MainLayout(BoxLayout):
 
         # Title
         title = Label(
-            text="🦉 Game Text Translator",
+            text="ðŸ¦‰ Game Text Translator",
             size_hint_y=0.1, font_size='20sp', bold=True
         )
         self.add_widget(title)
 
         # SRC
-        self.add_widget(Label(text="📂 Folder ENG:", size_hint_y=0.05, halign='left'))
+        self.add_widget(Label(text="ðŸ“‚ Folder ENG:", size_hint_y=0.05, halign='left'))
         self.src_input = TextInput(
             text="/storage/emulated/0/Download/ENG",
             size_hint_y=0.08, multiline=False
@@ -200,7 +200,7 @@ class MainLayout(BoxLayout):
         self.add_widget(self.src_input)
 
         # DST
-        self.add_widget(Label(text="📁 Folder xuất VIE:", size_hint_y=0.05, halign='left'))
+        self.add_widget(Label(text="ðŸ“ Folder xuáº¥t VIE:", size_hint_y=0.05, halign='left'))
         self.dst_input = TextInput(
             text="/storage/emulated/0/Download/VIE",
             size_hint_y=0.08, multiline=False
@@ -210,17 +210,17 @@ class MainLayout(BoxLayout):
         # ZIP mode
         zip_row = BoxLayout(size_hint_y=0.06, spacing=10)
         self.zip_input = TextInput(
-            text="hoặc kéo thả file .zip vào đây",
+            text="hoáº·c kÃ©o tháº£ file .zip vÃ o Ä‘Ã¢y",
             size_hint_x=0.7, multiline=False
         )
-        self.zip_btn = Button(text="📦 Xử lý ZIP", size_hint_x=0.3)
+        self.zip_btn = Button(text="ðŸ“¦ Xá»­ lÃ½ ZIP", size_hint_x=0.3)
         self.zip_btn.bind(on_press=self.on_zip)
         zip_row.add_widget(self.zip_input)
         zip_row.add_widget(self.zip_btn)
         self.add_widget(zip_row)
 
         # Translate button
-        self.go_btn = Button(text="🚀 Dịch ngay", size_hint_y=0.08)
+        self.go_btn = Button(text="ðŸš€ Dá»‹ch ngay", size_hint_y=0.08)
         self.go_btn.bind(on_press=self.on_translate)
         self.add_widget(self.go_btn)
 
@@ -230,7 +230,7 @@ class MainLayout(BoxLayout):
 
         # Status log
         self.status = Label(
-            text="Sẵn sàng 🦉", size_hint_y=0.06, font_size='14sp'
+            text="Sáºµn sÃ ng ðŸ¦‰", size_hint_y=0.06, font_size='14sp'
         )
         self.add_widget(self.status)
 
@@ -261,12 +261,12 @@ class MainLayout(BoxLayout):
         src = self.src_input.text.strip()
         dst = self.dst_input.text.strip()
         if not src or not os.path.isdir(src):
-            self.set_status("❌ Folder ENG không tồn tại!")
+            self.set_status("âŒ Folder ENG khÃ´ng tá»“n táº¡i!")
             return
         if not dst:
             dst = src + "_VIE"
         self.go_btn.disabled = True
-        self.go_btn.text = "⏳ Đang dịch..."
+        self.go_btn.text = "â³ Äang dá»‹ch..."
         self.progress.value = 0
 
         t = Translator(
@@ -281,19 +281,19 @@ class MainLayout(BoxLayout):
         try:
             t.run(src, dst)
         except Exception as e:
-            self.set_status(f"❌ Lỗi: {e}")
+            self.set_status(f"âŒ Lá»—i: {e}")
         finally:
             def upd(dt):
                 self.go_btn.disabled = False
-                self.go_btn.text = "🚀 Dịch ngay"
+                self.go_btn.text = "ðŸš€ Dá»‹ch ngay"
             Clock.schedule_once(upd)
 
     def on_zip(self, instance):
         zip_path = self.zip_input.text.strip()
         if not zip_path or not os.path.isfile(zip_path) or not zip_path.lower().endswith('.zip'):
-            self.set_status("❌ File .zip không hợp lệ!")
+            self.set_status("âŒ File .zip khÃ´ng há»£p lá»‡!")
             return
-        self.set_status(f"📦 Đang giải nén: {os.path.basename(zip_path)}")
+        self.set_status(f"ðŸ“¦ Äang giáº£i nÃ©n: {os.path.basename(zip_path)}")
         tmp = tempfile.mkdtemp(prefix='gtt_')
         try:
             with zipfile.ZipFile(zip_path, 'r') as z:
@@ -318,16 +318,16 @@ class MainLayout(BoxLayout):
                     for f in fs:
                         fp = os.path.join(r, f)
                         z.write(fp, os.path.relpath(fp, outdir))
-            self.set_status(f"🗜️ Zip: {outzip}")
+            self.set_status(f"ðŸ—œï¸ Zip: {outzip}")
         except Exception as e:
-            self.set_status(f"❌ Lỗi: {e}")
+            self.set_status(f"âŒ Lá»—i: {e}")
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
 
 class GTApp(App):
     def build(self):
-        self.title = "🦉 Game Text Translator"
+        self.title = "ðŸ¦‰ Game Text Translator"
         return MainLayout()
 
 

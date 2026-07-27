@@ -8,6 +8,7 @@ package.name = gametexttranslator
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.kiri.translator
+version = 1.0.0
 
 # (str) Source code where the main.py lives
 source.dir = .
@@ -40,7 +41,7 @@ android.sdk = 34
 android.ndk = 27
 
 # (bool) Use Android NDK r27+
-android.ndk_api = 21
+# android.ndk_api = 21
 
 # (str) Android SDK directory (overrides ANDROID_HOME env var)
 # android.sdk_path =
@@ -67,7 +68,7 @@ android.archs = arm64-v8a
 # p4a.source_dir =
 
 # (str) Requirements (comma separated)
-requirements = python3,kivy,plyer,pyjnius,hostpython3
+requirements = python3,kivy,plyer,pyjnius
 
 # (str) Presplash of the application
 # presplash.filename = %(source.dir)s/data/presplash.png
